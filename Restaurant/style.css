@@ -1,0 +1,93 @@
+ody {
+    font-family: Arial, sans-serif;
+    background-color: #fff8f0;
+    margin: 20px;
+}
+
+h2 {
+    color: brown;
+    border-bottom: 2px solid brown;
+    padding-bottom: 5px;
+}
+
+p {
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+nav {
+    background-color: brown;
+    padding: 15px;
+    text-align: center;
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+    margin: 15px;
+    font-weight: bold;
+}
+
+nav a:hover {
+    color: yellow;
+}
+
+section {
+    padding: 15px;
+    margin: 15px 0;
+}
+
+img {
+    border-radius: 10px;
+    margin-top: 10px;
+    max-width: 100%;
+}
+
+table {
+    border-collapse: collapse;
+    width: 60%;
+    background-color: white;
+}
+
+th, td {
+    padding: 12px;
+    text-align: center;
+}
+
+th {
+    background-color: brown;
+    color: white;
+}
+
+form {
+    background-color: #f5e1d0;
+    padding: 20px;
+    width: 350px;
+    border-radius: 10px;
+}
+
+input, select {
+    padding: 8px;
+    margin-top: 5px;
+}
+
+input[type="submit"] {
+    background-color: green;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+input[type="reset"] {
+    background-color: gray;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+footer {
+    background-color: brown;
+    color: white;
+    text-align: center;
+    padding: 10px;
+}
