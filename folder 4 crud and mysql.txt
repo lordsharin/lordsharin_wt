@@ -1,0 +1,242 @@
+1.Student CRUD Operations
+
+
+ 	1.Create database and table
+CREATE DATABASE college;
+USE college;
+
+CREATE TABLE students (
+    id INT PRIMARY KEY,
+    name VARCHAR(50),
+    course VARCHAR(50),
+    email VARCHAR(50)
+);
+
+
+	2. Insert student record
+
+INSERT INTO students
+VALUES (1, 'Rahul', 'Computer', 'rahul@gmail.com');
+
+
+	3. Display records
+SELECT * FROM students;
+
+
+	4. Update record
+UPDATE students
+SET course = 'IT'
+WHERE id = 1;
+
+
+	5. Delete record
+DELETE FROM students
+WHERE id = 1;
+
+
+
+
+
+
+
+
+2.Product CRUD Operations (MySQL)
+
+
+
+1. Create database and table
+CREATE DATABASE shop;
+USE shop;
+
+CREATE TABLE products (
+    id INT PRIMARY KEY,
+    name VARCHAR(50),
+    price INT,
+    category VARCHAR(50),
+    quantity INT
+);
+
+
+2. Insert product
+INSERT INTO products
+VALUES (1, 'Laptop', 50000, 'Electronics', 10);
+
+
+3. Display products
+SELECT * FROM products;
+
+
+4. Update product
+UPDATE products
+SET price = 55000, quantity = 8
+WHERE id = 1;
+
+
+5. Delete product
+DELETE FROM products
+WHERE id = 1;
+
+
+
+
+
+
+3.Employee Management System (Node.js + MySQL)
+
+
+Step 1: Install packages
+Open the terminal in your project folder:
+npm init -y
+npm install express mysql2
+
+
+Step 2: Create database and table in MySQL
+CREATE DATABASE company;
+USE company;
+
+CREATE TABLE employees (
+    id INT PRIMARY KEY,
+    name VARCHAR(50),
+    salary INT,
+    department VARCHAR(50)
+);
+
+
+Step 3: Create employee.js
+const express = require('express');
+const mysql = require('mysql2');
+
+
+
+code:
+
+const app = express();
+app.use(express.json());
+
+const db = mysql.createConnection({
+    host: 'localhost',
+    user: 'root',
+    password: 'your_password',
+    database: 'company'
+});
+
+db.connect(err => {
+    if (err) throw err;
+    console.log("MySQL Connected");
+});
+
+// Insert employee
+app.post('/add', (req, res) => {
+    const e = req.body;
+    db.query("INSERT INTO employees VALUES (?, ?, ?, ?)",
+    [e.id, e.name, e.salary, e.department],
+    () => res.send("Employee Added"));
+});
+
+// Display employees
+app.get('/employees', (req, res) => {
+    db.query("SELECT * FROM employees",
+    (err, result) => res.json(result));
+});
+
+// Update employee
+app.put('/update/:id', (req, res) => {
+    db.query("UPDATE employees SET salary=? WHERE id=?",
+    [req.body.salary, req.params.id],
+    () => res.send("Employee Updated"));
+});
+
+// Delete employee
+app.delete('/delete/:id', (req, res) => {
+    db.query("DELETE FROM employees WHERE id=?",
+    [req.params.id],
+    () => res.send("Employee Deleted"));
+});
+
+app.listen(3000, () => console.log("Server running"));
+
+
+Replace your_password with your actual MySQL password. If your MySQL account has no password, use an empty string ('').
+Step 4: Run the program
+node employee.js
+
+
+
+
+
+
+
+
+4.Student Management API (Node.js + Express + MySQL)
+
+Step 1: Install packages
+npm init -y
+npm install express mysql2
+
+
+Step 2: Create database and table
+CREATE DATABASE college;
+USE college;
+
+CREATE TABLE students (
+    id INT PRIMARY KEY,
+    name VARCHAR(50),
+    course VARCHAR(50),
+    email VARCHAR(50)
+);
+
+
+Step 3: Create student.js
+const express = require('express');
+const mysql = require('mysql2');
+
+
+code:
+const app = express();
+app.use(express.json());
+
+const db = mysql.createConnection({
+    host: 'localhost',
+    user: 'root',
+    password: 'your_password',
+    database: 'college'
+});
+
+db.connect(err => {
+    if (err) throw err;
+    console.log("Database Connected");
+});
+
+// CREATE
+app.post('/students', (req, res) => {
+    const s = req.body;
+    db.query("INSERT INTO students VALUES (?, ?, ?, ?)",
+    [s.id, s.name, s.course, s.email],
+    () => res.send("Student Added"));
+});
+
+// READ
+app.get('/students', (req, res) => {
+    db.query("SELECT * FROM students",
+    (err, result) => res.json(result));
+});
+
+// UPDATE
+app.put('/students/:id', (req, res) => {
+    db.query("UPDATE students SET course=? WHERE id=?",
+    [req.body.course, req.params.id],
+    () => res.send("Student Updated"));
+});
+
+// DELETE
+app.delete('/students/:id', (req, res) => {
+    db.query("DELETE FROM students WHERE id=?",
+    [req.params.id],
+    () => res.send("Student Deleted"));
+});
+
+app.listen(3000, () => console.log("Server running"));
+
+
+Step 4: Run the program
+node student.js

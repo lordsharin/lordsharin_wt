@@ -1,0 +1,476 @@
+Practical 27 — Student Portal
+Aim: Create a full-stack student portal using HTML, CSS, JavaScript, Node.js, Express and MySQL. Implement student registration and CRUD operations.
+
+Step 1: Create database
+CREATE DATABASE studentdb;
+USE studentdb;
+
+CREATE TABLE students (
+    id INT PRIMARY KEY,
+    name VARCHAR(50),
+    email VARCHAR(50),
+    course VARCHAR(50)
+);
+
+
+Step 2: Install packages
+npm init -y
+npm install express mysql2
+
+
+Step 3: Create server.js
+const express = require('express');
+const mysql = require('mysql2');
+
+const app = express();
+app.use(express.json());
+app.use(express.static('public'));
+
+const db = mysql.createConnection({
+    host: 'localhost',
+    user: 'root',
+    password: 'your_password',
+    database: 'studentdb'
+});
+
+db.connect(err => {
+    if (err) throw err;
+    console.log("Database Connected");
+});
+
+// Register student
+app.post('/students', (req, res) => {
+    const s = req.body;
+    db.query("INSERT INTO students VALUES (?, ?, ?, ?)",
+    [s.id, s.name, s.email, s.course],
+    () => res.send("Student Registered"));
+});
+
+// Display students
+app.get('/students', (req, res) => {
+    db.query("SELECT * FROM students",
+    (err, result) => res.json(result));
+});
+
+// Update student
+app.put('/students/:id', (req, res) => {
+    db.query("UPDATE students SET name=? WHERE id=?",
+    [req.body.name, req.params.id],
+    () => res.send("Student Updated"));
+});
+
+// Delete student
+app.delete('/students/:id', (req, res) => {
+    db.query("DELETE FROM students WHERE id=?",
+    [req.params.id],
+    () => res.send("Student Deleted"));
+});
+
+app.listen(3000, () => console.log("Server running"));
+
+
+Step 4: Create frontend
+Create a folder named public and inside it create index.html.
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Student Portal</title>
+</head>
+<body>
+    <h2>Student Registration</h2>
+
+    <input id="id" placeholder="ID">
+    <input id="name" placeholder="Name">
+    <input id="email" placeholder="Email">
+    <input id="course" placeholder="Course">
+
+    <button onclick="addStudent()">Register</button>
+    <button onclick="showStudents()">Display Students</button>
+
+    <div id="result"></div>
+
+    <script>
+    function addStudent() {
+        fetch('/students', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                id: id.value,
+                name: name.value,
+                email: email.value,
+                course: course.value
+            })
+        })
+        .then(res => res.text())
+        .then(msg => alert(msg));
+    }
+
+    function showStudents() {
+        fetch('/students')
+        .then(res => res.json())
+        .then(data => {
+            result.innerHTML = JSON.stringify(data);
+        });
+    }
+    </script>
+</body>
+</html>
+
+
+Step 5: Run
+node server.js
+
+
+Open http://localhost:3000.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Practical 28 — Blog Management System
+Aim: Create a full-stack blogging application where users can add, view, edit and delete blog posts using REST APIs and a database.
+Step 1: Create database
+CREATE DATABASE blogdb;
+USE blogdb;
+
+CREATE TABLE blogs (
+    id INT PRIMARY KEY,
+    title VARCHAR(100),
+    content TEXT
+);
+
+
+Step 2: Install packages
+npm init -y
+npm install express mysql2
+
+
+Step 3: Create blog.js
+const express = require('express');
+const mysql = require('mysql2');
+
+const app = express();
+app.use(express.json());
+
+const db = mysql.createConnection({
+    host: 'localhost',
+    user: 'root',
+    password: 'your_password',
+    database: 'blogdb'
+});
+
+db.connect(err => {
+    if (err) throw err;
+    console.log("Database Connected");
+});
+
+// Add blog
+app.post('/blogs', (req, res) => {
+    const b = req.body;
+    db.query("INSERT INTO blogs VALUES (?, ?, ?)",
+    [b.id, b.title, b.content],
+    () => res.send("Blog Added"));
+});
+
+// View blogs
+app.get('/blogs', (req, res) => {
+    db.query("SELECT * FROM blogs",
+    (err, result) => res.json(result));
+});
+
+// Edit blog
+app.put('/blogs/:id', (req, res) => {
+    db.query("UPDATE blogs SET title=?, content=? WHERE id=?",
+    [req.body.title, req.body.content, req.params.id],
+    () => res.send("Blog Updated"));
+});
+
+// Delete blog
+app.delete('/blogs/:id', (req, res) => {
+    db.query("DELETE FROM blogs WHERE id=?",
+    [req.params.id],
+    () => res.send("Blog Deleted"));
+});
+
+app.listen(3000, () => console.log("Server running"));
+
+
+Step 4: Run the program
+node blog.js
+
+
+Step 5: Test using Postman
+Operation	Method	URL
+Add blog	POST	localhost:3000/blogs
+View blogs	GET	localhost:3000/blogs
+Edit blog	PUT	localhost:3000/blogs/1
+Delete blog	DELETE	localhost:3000/blogs/1
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Practical 29 — User Registration and Login System
+Aim: Create a full-stack application with user registration and login functionality. Store user details in a database and perform input validation.
+
+For this practical, we will store the user's name, email and password in MySQL. The password should be stored as a hash, not as plain text.
+Step 1: Create database
+CREATE DATABASE userdb;
+USE userdb;
+
+CREATE TABLE users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(50),
+    email VARCHAR(100) UNIQUE,
+    password VARCHAR(255)
+);
+
+
+Step 2: Install packages
+npm init -y
+npm install express mysql2 bcryptjs
+
+
+Step 3: Create login.js
+const express = require('express');
+const mysql = require('mysql2');
+const bcrypt = require('bcryptjs');
+
+const app = express();
+app.use(express.json());
+
+const db = mysql.createConnection({
+    host: 'localhost',
+    user: 'root',
+    password: 'your_password',
+    database: 'userdb'
+});
+
+db.connect(err => {
+    if (err) throw err;
+    console.log("Database Connected");
+});
+
+// Registration
+app.post('/register', async (req, res) => {
+    const {name, email, password} = req.body;
+
+    if (!name || !email || !password || password.length < 6)
+        return res.send("Enter valid details");
+
+    const hash = await bcrypt.hash(password, 10);
+
+    db.query("INSERT INTO users (name,email,password) VALUES (?,?,?)",
+    [name, email, hash],
+    err => {
+        if (err) return res.send("Email already registered");
+        res.send("Registration Successful");
+    });
+});
+
+// Login
+app.post('/login', (req, res) => {
+    const {email, password} = req.body;
+
+    db.query("SELECT * FROM users WHERE email=?",
+    [email], async (err, result) => {
+        if (err || result.length == 0)
+            return res.send("User not found");
+
+        const valid = await bcrypt.compare(
+            password, result[0].password
+        );
+
+        if (valid)
+            res.send("Login Successful");
+        else
+            res.send("Wrong Password");
+    });
+});
+
+app.listen(3000, () => console.log("Server running"));
+
+
+Step 4: Run
+node login.js
+
+
+
+
+
+
+
+
+
+
+
+
+Practical 30 — Full-Stack Management System
+Aim: Design and develop a full-stack web application using HTML, CSS, JavaScript, Node.js, Express and MySQL/MongoDB. Implement authentication, CRUD operations, REST API communication, input validation and database integration.
+
+
+Step 1: Create database
+CREATE DATABASE management;
+USE management;
+
+CREATE TABLE students (
+    id INT PRIMARY KEY,
+    name VARCHAR(50),
+    email VARCHAR(100),
+    course VARCHAR(50)
+);
+
+
+Step 2: Install packages
+npm init -y
+npm install express mysql2
+
+
+Step 3: Create app.js
+const express = require('express');
+const mysql = require('mysql2');
+
+const app = express();
+app.use(express.json());
+
+const db = mysql.createConnection({
+    host: 'localhost',
+    user: 'root',
+    password: 'your_password',
+    database: 'management'
+});
+
+db.connect(err => {
+    if (err) throw err;
+    console.log("Database Connected");
+});
+
+// CREATE
+app.post('/students', (req, res) => {
+    const s = req.body;
+
+    if (!s.name || !s.email || !s.course)
+        return res.send("All fields are required");
+
+    db.query("INSERT INTO students VALUES (?, ?, ?, ?)",
+    [s.id, s.name, s.email, s.course],
+    err => {
+        if (err) return res.send("Error adding student");
+        res.send("Student Added");
+    });
+});
+
+// READ
+app.get('/students', (req, res) => {
+    db.query("SELECT * FROM students",
+    (err, result) => res.json(result));
+});
+
+// UPDATE
+app.put('/students/:id', (req, res) => {
+    db.query("UPDATE students SET course=? WHERE id=?",
+    [req.body.course, req.params.id],
+    () => res.send("Student Updated"));
+});
+
+// DELETE
+app.delete('/students/:id', (req, res) => {
+    db.query("DELETE FROM students WHERE id=?",
+    [req.params.id],
+    () => res.send("Student Deleted"));
+});
+
+app.listen(3000, () => console.log("Server running"));
+
+
+Step 4: Create frontend
+Create a folder named public and create index.html inside it.
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Management System</title>
+</head>
+<body>
+
+<h2>Student Management System</h2>
+
+<input id="sid" placeholder="Student ID">
+<input id="sname" placeholder="Name">
+<input id="email" placeholder="Email">
+<input id="course" placeholder="Course">
+
+<button onclick="add()">Add Student</button>
+<button onclick="show()">View Students</button>
+
+<div id="result"></div>
+
+<script>
+function add() {
+    if (!sid.value || !sname.value ||
+        !email.value || !course.value) {
+        alert("Fill all fields");
+        return;
+    }
+
+    fetch('/students', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+            id: sid.value,
+            name: sname.value,
+            email: email.value,
+            course: course.value
+        })
+    })
+    .then(res => res.text())
+    .then(msg => alert(msg));
+}
+
+function show() {
+    fetch('/students')
+    .then(res => res.json())
+    .then(data => {
+        result.innerHTML = JSON.stringify(data);
+    });
+}
+</script>
+
+</body>
+</html>
+
+
+Add this line to app.js after app.use(express.json()):
+app.use(express.static('public'));
+
+
+Step 5: Run the application
+node app.js
+
+
+Open http://localhost:3000 in your browser
