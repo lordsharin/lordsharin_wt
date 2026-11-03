@@ -1,0 +1,548 @@
+1.Simple Calculator
+Filename: calculator.html
+
+
+<!DOCTYPE html>
+<html>
+<head>
+<title>Calculator</title>
+<style>
+body { text-align:center; font-family:Arial; }
+input, button { padding:10px; margin:5px; }
+</style>
+</head>
+<body>
+
+<h2>Simple Calculator</h2>
+
+<input type="number" id="n1" placeholder="First number">
+<input type="number" id="n2" placeholder="Second number">
+
+<br>
+
+<button onclick="calc('+')">+</button>
+<button onclick="calc('-')">-</button>
+<button onclick="calc('*')">*</button>
+<button onclick="calc('/')">/</button>
+
+<h3 id="result">Result:</h3>
+
+<script>
+function calc(op) {
+    let a = Number(document.getElementById("n1").value);
+    let b = Number(document.getElementById("n2").value);
+    let r;
+
+    if(op == '+') r = a + b;
+    else if(op == '-') r = a - b;
+    else if(op == '*') r = a * b;
+    else if(op == '/') {
+        if(b == 0) {
+            document.getElementById("result").innerHTML = "Cannot divide by zero";
+            return;
+        }
+        r = a / b;
+    }
+
+    document.getElementById("result").innerHTML = "Result: " + r;
+}
+</script>
+
+</body>
+</html>
+
+
+
+
+2.Student Grade Calculator
+Filename: grade.html
+
+
+<!DOCTYPE html>
+<html>
+<head>
+<title>Grade Calculator</title>
+</head>
+<body>
+
+<h2>Student Grade Calculator</h2>
+
+<button onclick="calculate()">Calculate Grade</button>
+
+<script>
+function calculate() {
+    let m1 = Number(prompt("Enter subject 1 marks"));
+    let m2 = Number(prompt("Enter subject 2 marks"));
+    let m3 = Number(prompt("Enter subject 3 marks"));
+
+    let total = m1 + m2 + m3;
+    let per = total / 3;
+    let grade;
+
+    if(per >= 90) grade = "A";
+    else if(per >= 75) grade = "B";
+    else if(per >= 60) grade = "C";
+    else if(per >= 40) grade = "D";
+    else grade = "Fail";
+
+    alert("Total: " + total +
+          "\nPercentage: " + per.toFixed(2) +
+          "%\nGrade: " + grade);
+}
+</script>
+
+</body>
+</html>
+
+
+
+3.Age Calculator
+Filename: age.html
+
+
+<!DOCTYPE html>
+<html>
+<head>
+<title>Age Calculator</title>
+</head>
+<body>
+
+<h2>Age Calculator</h2>
+
+Enter Date of Birth:
+<input type="date" id="dob">
+
+<button onclick="calculateAge()">Calculate Age</button>
+
+<h3 id="result"></h3>
+
+<script>
+function calculateAge() {
+    let dob = new Date(document.getElementById("dob").value);
+    let today = new Date();
+
+    if(!document.getElementById("dob").value || dob > today) {
+        document.getElementById("result").innerHTML = "Enter a valid date";
+        return;
+    }
+
+    let age = today.getFullYear() - dob.getFullYear();
+
+    if(today.getMonth() < dob.getMonth() ||
+      (today.getMonth() == dob.getMonth() &&
+       today.getDate() < dob.getDate())) {
+        age--;
+    }
+
+    document.getElementById("result").innerHTML =
+    "Your Age is: " + age + " years";
+}
+</script>
+
+</body>
+</html>
+
+
+
+
+4.Login Form Validation
+Filename: login.html
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
+<title>Login Form</title>
+<style>
+body { font-family:Arial; text-align:center; }
+form { background:lightblue; padding:20px; width:300px; margin:auto; }
+input { padding:8px; margin:8px; }
+</style>
+</head>
+<body>
+
+<h2>Login Form</h2>
+
+<form onsubmit="return validate()">
+
+<input type="text" id="user" placeholder="Enter Username"><br>
+
+<input type="password" id="pass" placeholder="Enter Password"><br>
+
+<button type="submit">Login</button>
+
+</form>
+
+<p id="msg"></p>
+
+<script>
+function validate() {
+    let u = document.getElementById("user").value;
+    let p = document.getElementById("pass").value;
+
+    if(u == "" || p == "") {
+        document.getElementById("msg").innerHTML =
+        "All fields are required";
+        return false;
+    }
+
+    if(p.length < 6) {
+        document.getElementById("msg").innerHTML =
+        "Password must be at least 6 characters";
+        return false;
+    }
+
+    document.getElementById("msg").innerHTML = "Login Successful";
+    return false;
+}
+</script>
+
+</body>
+</html>
+
+
+
+5.Student Registration Form Validation
+Filename: student.html
+
+
+<!DOCTYPE html>
+<html>
+<head>
+<title>Student Registration</title>
+<style>
+body { font-family:Arial; text-align:center; }
+form { background:lightblue; padding:20px; width:300px; margin:auto; }
+input { padding:8px; margin:7px; }
+</style>
+</head>
+<body>
+
+<h2>Student Registration</h2>
+
+<form onsubmit="return validate()">
+
+<input type="text" id="name" placeholder="Name"><br>
+<input type="email" id="email" placeholder="Email"><br>
+<input type="text" id="phone" placeholder="Phone Number"><br>
+<input type="password" id="pass" placeholder="Password"><br>
+
+<button type="submit">Register</button>
+
+</form>
+
+<p id="msg"></p>
+
+<script>
+function validate() {
+    let n = document.getElementById("name").value;
+    let e = document.getElementById("email").value;
+    let p = document.getElementById("phone").value;
+    let pass = document.getElementById("pass").value;
+
+    if(n == "" || e == "" || p == "" || pass == "") {
+        alert("All fields are required");
+        return false;
+    }
+
+    if(!/^[0-9]{10}$/.test(p)) {
+        alert("Enter valid 10 digit phone number");
+        return false;
+    }
+
+    if(pass.length < 6) {
+        alert("Password must have 6 characters");
+        return false;
+    }
+
+    alert("Registration Successful!");
+    return false;
+}
+</script>
+
+</body>
+</html>
+
+
+
+
+6.Quiz Application
+Filename: quiz.html
+
+
+<!DOCTYPE html>
+<html>
+<head>
+<title>Quiz Application</title>
+</head>
+<body>
+
+<h2>JavaScript Quiz</h2>
+
+<p>1. Which language is used for web styling?</p>
+
+<input type="radio" name="q1" value="HTML"> HTML<br>
+<input type="radio" name="q1" value="CSS"> CSS<br>
+<input type="radio" name="q1" value="Java"> Java<br>
+
+<p>2. Which tag creates a paragraph?</p>
+
+<input type="radio" name="q2" value="h1"> h1<br>
+<input type="radio" name="q2" value="p"> p<br>
+<input type="radio" name="q2" value="div"> div<br>
+
+<button onclick="check()">Submit Quiz</button>
+
+<h3 id="result"></h3>
+
+<script>
+function check() {
+    let score = 0;
+
+    let a = document.querySelector('input[name="q1"]:checked');
+    let b = document.querySelector('input[name="q2"]:checked');
+
+    if(a && a.value == "CSS") score++;
+    if(b && b.value == "p") score++;
+
+    document.getElementById("result").innerHTML =
+    "Your Score: " + score + "/2";
+}
+</script>
+
+</body>
+</html>
+
+
+
+
+7.To-Do List Application
+Filename: todo.html
+
+
+<!DOCTYPE html>
+<html>
+<head>
+<title>To Do List</title>
+</head>
+<body>
+
+<h2>My To-Do List</h2>
+
+<input type="text" id="task" placeholder="Enter a task">
+
+<button onclick="addTask()">Add Task</button>
+
+<ul id="list"></ul>
+
+<script>
+function addTask() {
+    let task = document.getElementById("task").value;
+
+    if(task == "") {
+        alert("Enter a task");
+        return;
+    }
+
+    let li = document.createElement("li");
+    li.innerHTML = task;
+
+    let btn = document.createElement("button");
+    btn.innerHTML = "Delete";
+
+    btn.onclick = function() {
+        li.remove();
+    };
+
+    li.appendChild(btn);
+    document.getElementById("list").appendChild(li);
+
+    document.getElementById("task").value = "";
+}
+</script>
+
+</body>
+</html>
+
+
+
+8.Digital Clock
+Filename: clock.html
+
+
+<!DOCTYPE html>
+<html>
+<head>
+<title>Digital Clock</title>
+<style>
+body {
+    text-align:center;
+    background:black;
+    color:white;
+    font-family:Arial;
+}
+h1 { font-size:50px; }
+</style>
+</head>
+<body>
+
+<h2>Digital Clock</h2>
+
+<h1 id="clock"></h1>
+
+<script>
+function showTime() {
+    let time = new Date();
+
+    let h = time.getHours();
+    let m = time.getMinutes();
+    let s = time.getSeconds();
+
+    h = h < 10 ? "0" + h : h;
+    m = m < 10 ? "0" + m : m;
+    s = s < 10 ? "0" + s : s;
+
+    document.getElementById("clock").innerHTML =
+    h + ":" + m + ":" + s;
+}
+
+setInterval(showTime, 1000);
+showTime();
+</script>
+
+</body>
+</html>
+
+
+
+9.Number Checking Application
+Filename: number.html
+
+
+<!DOCTYPE html>
+<html>
+<head>
+<title>Number Checking</title>
+</head>
+<body>
+
+<h2>Number Checking Application</h2>
+
+<input type="number" id="num" placeholder="Enter a number">
+
+<button onclick="check()">Check Number</button>
+
+<h3 id="result"></h3>
+
+<script>
+function check() {
+    let n = Number(document.getElementById("num").value);
+    let r = "";
+
+    if(document.getElementById("num").value == "") {
+        document.getElementById("result").innerHTML = "Enter a number";
+        return;
+    }
+
+    if(n > 0) r += "Positive<br>";
+    else if(n < 0) r += "Negative<br>";
+    else r += "Zero<br>";
+
+    if(n % 2 == 0) r += "Even<br>";
+    else r += "Odd<br>";
+
+    let prime = true;
+
+    if(n <= 1) prime = false;
+
+    for(let i = 2; i <= Math.sqrt(n); i++) {
+        if(n % i == 0) {
+            prime = false;
+            break;
+        }
+    }
+
+    if(prime) r += "Prime Number";
+    else r += "Not Prime Number";
+
+    document.getElementById("result").innerHTML = r;
+}
+</script>
+
+</body>
+</html>
+
+
+
+
+10.Dynamic Student Table
+Filename: dynamic.html
+
+
+<!DOCTYPE html>
+<html>
+<head>
+<title>Student Table</title>
+<style>
+table {
+    border-collapse:collapse;
+    margin-top:20px;
+}
+th, td {
+    border:1px solid black;
+    padding:10px;
+}
+</style>
+</head>
+<body>
+
+<h2>Student Details</h2>
+
+<input type="text" id="name" placeholder="Enter Name">
+<input type="text" id="roll" placeholder="Enter Roll No">
+
+<button onclick="addStudent()">Add Student</button>
+
+<table>
+<tr>
+    <th>Name</th>
+    <th>Roll Number</th>
+</tr>
+<tbody id="data"></tbody>
+</table>
+
+<script>
+function addStudent() {
+    let name = document.getElementById("name").value;
+    let roll = document.getElementById("roll").value;
+
+    if(name == "" || roll == "") {
+        alert("Enter all details");
+        return;
+    }
+
+    let row = document.createElement("tr");
+
+    let td1 = document.createElement("td");
+    let td2 = document.createElement("td");
+
+    td1.innerHTML = name;
+    td2.innerHTML = roll;
+
+    row.appendChild(td1);
+    row.appendChild(td2);
+
+    document.getElementById("data").appendChild(row);
+
+    document.getElementById("name").value = "";
+    document.getElementById("roll").value = "";
+}
+</script>
+
+</body>
+</html>
+
+
+
+
